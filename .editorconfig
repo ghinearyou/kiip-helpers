@@ -1,0 +1,4 @@
+[*.php]
+php_diagnostic_php0413 = false
+php_diagnostic_php0417 = false
+php_diagnostic = true
