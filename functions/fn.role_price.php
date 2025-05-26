@@ -19,7 +19,7 @@ function read_custom_json_file()
 
 function apply_quantity_discount($cart)
 {
-	if (get_option('kiip_discount_enabled') !== 'yes') {
+	if (get_option('role_price_module') !== 'yes') {
 		return;
 	}
 
