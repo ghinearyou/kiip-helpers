@@ -1,6 +1,6 @@
 <?php
 
-function list_menu()
+function list_menu_page()
 {
   $modules = [
     'checkout_field_remover_module' => 'Hapus field checkout',

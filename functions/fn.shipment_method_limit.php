@@ -2,6 +2,10 @@
 
 function remove_flat_rate_shipping($rates, $package)
 {
+  if (get_option('order_notification_module') !== 'yes') {
+    return;
+  }
+
   $user = wp_get_current_user();
   foreach ($rates as $rate_key => $rate) {
     if (!array_intersect(['administrator', 'reseller'], (array) $user->roles)) {

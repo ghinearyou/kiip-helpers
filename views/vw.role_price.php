@@ -2,25 +2,9 @@
 
 function role_price_page()
 {
-  if (isset($_POST['kiip_discount_enabled'])) {
-    update_option('kiip_discount_enabled', 'yes');
-  } else {
-    update_option('kiip_discount_enabled', 'no');
-  }
-
-  // Ambil status saat ini
-  $enabled = get_option('kiip_discount_enabled', 'no');
   ?>
   <div class="wrap">
     <h1>Role Price Setting</h1>
-    <form method="post">
-      <label>
-        <input type="checkbox" name="kiip_discount_enabled" value="yes" <?php checked($enabled, 'yes'); ?> />
-        Aktifkan diskon kuantitas berdasarkan jumlah dan role
-      </label>
-      <br><br>
-      <input type="submit" class="button button-primary" value="Simpan Pengaturan">
-    </form>
     <form method="post" enctype="multipart/form-data">
       <?php
       settings_fields('my_custom_plugin_settings_group');
