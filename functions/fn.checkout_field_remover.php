@@ -3,7 +3,7 @@
 function custom_remove_checkout_fields($fields)
 {
   if (get_option('order_notification_module') !== 'yes') {
-    return;
+    return $fields;
   }
 
   unset($fields['billing']['billing_pinpoint_location']);

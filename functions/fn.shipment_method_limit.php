@@ -3,7 +3,7 @@
 function remove_flat_rate_shipping($rates, $package)
 {
   if (get_option('order_notification_module') !== 'yes') {
-    return;
+    return $rates;
   }
 
   $user = wp_get_current_user();
