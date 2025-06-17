@@ -5,9 +5,13 @@ function larkBot()
     return;
   }
 
+  $input1 = get_option('onm_input_bot_url', '');
+  $input2 = get_option('onm_input_web_name', '');
+  $input3 = get_option('onm_input_web_url', '');
+  
   $curl = curl_init();
   curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://open.larksuite.com/open-apis/bot/v2/hook/6985acde-fd63-426b-b9a6-75616f055ce3',
+    CURLOPT_URL => $input1,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -27,8 +31,8 @@ function larkBot()
 								"text": "New Order at "
 							},{
 															"tag": "a",
-															"text": "KiiP",
-															"href": "https://www.kiipkiip.com/"
+															"text": ' . $input2 . ',
+															"href": ' . $input3 . '
 							}
 											]
 									]

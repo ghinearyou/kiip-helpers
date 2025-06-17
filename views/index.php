@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/vw.image_formatter.php';
 require_once __DIR__ . '/vw.order_notification.php';
 require_once __DIR__ . '/vw.role_price.php';
 require_once __DIR__ . '/vw.title_limiter.php';
@@ -99,6 +100,10 @@ function list_menu_page()
 
     <div id="checkout_field_remover_module" class="tabcontent">
       <p>Hapus field checkout</p>
+    </div>
+
+    <div id="image_formatter_module" class="tabcontent">
+      <?php image_formatter_page(); ?>
     </div>
 
     <div id="order_notification_module" class="tabcontent">
