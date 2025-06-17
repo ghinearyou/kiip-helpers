@@ -66,6 +66,3 @@ function apply_quantity_discount($cart)
 }
 
 add_action('woocommerce_before_calculate_totals', 'apply_quantity_discount', 10, 1);
-
-
-

@@ -5,8 +5,7 @@ function astra_limit_woocommerce_product_title($title, $id = null)
     return;
   }
 
-  // $limit = get_option('title_limiter_module_input1', '') || 0;
-  $limit = 30;
+  $limit = get_option('tlm_input_letter', '') || 0;
 
   // Set the character limit you prefer
   if (strlen($title) > $limit) {

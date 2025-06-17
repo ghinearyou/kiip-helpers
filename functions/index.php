@@ -9,7 +9,7 @@ require_once plugin_dir_path(__FILE__) . '../views/index.php';
 require_once plugin_dir_path(__FILE__) . '../views/vw.role_price.php';
 
 $function_path = plugin_dir_path(__FILE__) . '../functions/';
-foreach (glob($view_path . '*.php') as $filename) {
+foreach (glob($function_path . '*.php') as $filename) {
   require_once $filename;
 }
 
