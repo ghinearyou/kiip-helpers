@@ -6,6 +6,8 @@ function webp_image_formatter($upload)
     return $upload;
   }
 
+  $quality = get_option('ifm_input_quality', 90);
+
   $file_path = $upload['file'];
   $file_type = wp_check_filetype($file_path);
   $upload_dir = wp_upload_dir();
@@ -44,7 +46,7 @@ function webp_image_formatter($upload)
     }
 
     // Convert and save
-    imagewebp($image, $new_path, 80);
+    imagewebp($image, $new_path, $quality);
     imagedestroy($image);
 
     if (file_exists($new_path)) {
