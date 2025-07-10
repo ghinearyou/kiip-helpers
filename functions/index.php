@@ -20,28 +20,28 @@ function index_menu()
     'KiiP Helpers', // Text to show on the menu link
     'manage_options', // Capability requirement to see the link
     'kiip-helpers', // The 'slug' - file to display when clicking the link
-    'list_menu' // Function to display the page content
+    'list_menu_page' // Function to display the page content
   );
 
   // Reseller Price
-  add_submenu_page(
-    'kiip-helpers',      // Parent slug (harus sama dengan menu utama)
-    'Custom Module',       // Judul halaman
-    'Custom Module',       // Teks menu (yang tampil di bawah menu utama)
-    'manage_options',        // Capability
-    'custom-module',       // Slug unik untuk submenu ini
-    'list_menu_page'   // Fungsi callback untuk kontennya
-  );
+  // add_submenu_page(
+  //   'kiip-helpers',      // Parent slug (harus sama dengan menu utama)
+  //   'Custom Module',       // Judul halaman
+  //   'Custom Module',       // Teks menu (yang tampil di bawah menu utama)
+  //   'manage_options',        // Capability
+  //   'custom-module',       // Slug unik untuk submenu ini
+  //   'list_menu_page'   // Fungsi callback untuk kontennya
+  // );
 
-  // Role Price
-  add_submenu_page(
-    'kiip-helpers',      // Parent slug (harus sama dengan menu utama)
-    'Role Price',       // Judul halaman
-    'Role Price',       // Teks menu (yang tampil di bawah menu utama)
-    'manage_options',        // Capability
-    'role-price',       // Slug unik untuk submenu ini
-    'role_price_page'   // Fungsi callback untuk kontennya
-  );
+  // // Role Price
+  // add_submenu_page(
+  //   'kiip-helpers',      // Parent slug (harus sama dengan menu utama)
+  //   'Role Price',       // Judul halaman
+  //   'Role Price',       // Teks menu (yang tampil di bawah menu utama)
+  //   'manage_options',        // Capability
+  //   'role-price',       // Slug unik untuk submenu ini
+  //   'role_price_page'   // Fungsi callback untuk kontennya
+  // );
 
   // Remove the submenu page from the menu
   add_action('admin_head', function () {

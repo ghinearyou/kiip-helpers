@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/vw.campaign_price.php';
 require_once __DIR__ . '/vw.image_formatter.php';
 require_once __DIR__ . '/vw.order_notification.php';
 require_once __DIR__ . '/vw.role_price.php';
@@ -96,6 +97,10 @@ function list_menu_page()
         <button class="tablinks"
           onclick="openCity(event, '<?php echo esc_attr($key); ?>')"><?php echo explode(" | ", $modules[$key])[0] ?></button>
       <?php endforeach; ?>
+    </div>
+
+    <div id="campaign_price_module" class="tabcontent">
+      <?php campaign_price_page(); ?>
     </div>
 
     <div id="checkout_field_remover_module" class="tabcontent">

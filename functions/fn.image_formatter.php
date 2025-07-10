@@ -12,11 +12,11 @@ function webp_image_formatter($upload)
   $file_type = wp_check_filetype($file_path);
   $upload_dir = wp_upload_dir();
   $dir = dirname($file_path);
-  $filename_wo_ext = pathinfo($file_path, PATHINFO_FILENAME);
+  // $filename_wo_ext = pathinfo($file_path, PATHINFO_FILENAME);
   $ext = strtolower($file_type['ext']);
 
   $timestamp = time();
-  $new_filename = $filename_wo_ext . '-' . $timestamp . '.webp';
+  $new_filename = $timestamp . '.webp';
   $new_path = $dir . '/' . $new_filename;
 
   if ($ext === 'webp') {
