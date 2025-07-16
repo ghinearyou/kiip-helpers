@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/vw.campaign_price.php';
+require_once __DIR__ . '/vw.delivery_fee_promo.php';
 require_once __DIR__ . '/vw.image_formatter.php';
 require_once __DIR__ . '/vw.order_notification.php';
 require_once __DIR__ . '/vw.role_price.php';
@@ -11,6 +12,7 @@ function list_menu_page()
   $modules = [
     'campaign_price_module' => 'CPM | Diskon berdasarkan campaign yang sedang berjalan',
     'checkout_field_remover_module' => 'CFRM | Hapus field checkout',
+    'delivery_fee_promo_module' => 'DFPM | Promo diskon ongkir',
     'image_formatter_module' => 'IFM | Format gambar menjadi WebP',
     'order_notification_module' => 'ONM | Tampilkan notifikasi saat diskon diterapkan',
     'role_price_module' => 'RPM | Diskon kuantitas berdasarkan jumlah dan role',
@@ -105,6 +107,10 @@ function list_menu_page()
 
     <div id="checkout_field_remover_module" class="tabcontent">
       <p>Hapus field checkout</p>
+    </div>
+
+    <div id="delivery_fee_promo_module" class="tabcontent">
+      <?php delivery_fee_promo_page(); ?>
     </div>
 
     <div id="image_formatter_module" class="tabcontent">
