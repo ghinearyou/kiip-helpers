@@ -17,7 +17,7 @@ function delivery_fee_promo($cart) {
   $shipping_total = $cart->get_shipping_total();
 
   if ($shipping_total > 0) {
-      $discount_amount = min($input1, $shipping_total);
-      $cart->add_fee($input2, -$discount_amount);
+      $discount_amount = min($input2, $shipping_total);
+      $cart->add_fee($input1, -$discount_amount);
   }
 }

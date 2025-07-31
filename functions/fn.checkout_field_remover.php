@@ -2,7 +2,7 @@
 
 function custom_remove_checkout_fields($fields)
 {
-  if (get_option('order_notification_module') !== 'yes') {
+  if (get_option('checkout_field_remover_module') !== 'yes') {
     return $fields;
   }
 

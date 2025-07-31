@@ -8,7 +8,25 @@ function larkBot()
   $input1 = get_option('onm_input_bot_url', '');
   $input2 = get_option('onm_input_web_name', '');
   $input3 = get_option('onm_input_web_url', '');
-  
+
+  $data = [
+    'msg_type' => 'post',
+    'content' => [
+      'post' => [
+        'zh_cn' => [
+          'content' => [
+            [
+              ['tag' => 'text', 'text' => 'New Order at '],
+              ['tag' => 'a', 'text' => $input2, 'href' => $input3],
+            ]
+          ]
+        ]
+      ]
+    ]
+  ];
+
+  $json_payload = json_encode($data, JSON_UNESCAPED_UNICODE); // biar karakter non-Latin tetap oke
+
   $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => $input1,
@@ -19,27 +37,7 @@ function larkBot()
     CURLOPT_FOLLOWLOCATION => true,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS => '{
-			"msg_type": "post",
-			"content": {
-					"post": {
-							"zh_cn": {
-									"content": [
-											[
-													{
-								"tag": "text",
-								"text": "New Order at "
-							},{
-															"tag": "a",
-															"text": ' . $input2 . ',
-															"href": ' . $input3 . '
-							}
-											]
-									]
-							}
-					}
-			}
-		}',
+    CURLOPT_POSTFIELDS => $json_payload,
     CURLOPT_HTTPHEADER => array(
       'Content-Type: application/json'
     ),

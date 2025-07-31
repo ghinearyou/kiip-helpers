@@ -2,7 +2,7 @@
 
 function remove_flat_rate_shipping($rates, $package)
 {
-  if (get_option('order_notification_module') !== 'yes') {
+  if (get_option('shipment_method_limit_module') !== 'yes') {
     return $rates;
   }
 

@@ -1,20 +1,32 @@
 <?php
-$jsonFile = plugin_dir_path(__FILE__) . '../output/op.campaignprice.json'; // Adjust the path as needed
+$phpFile = plugin_dir_path(__FILE__) . '../output/op.campaignprice.php';
 
 $dataArrays = [];
-if (file_exists($jsonFile)) {
-  $jsonContent = file_get_contents($jsonFile);
-  $decoded = json_decode($jsonContent, true);
 
-  if (is_array($decoded)) {
-    // Flatten: ambil semua kampanye jadi array per kampanye
-    foreach ($decoded as $campaign => $skuPrices) {
-      if (is_array($skuPrices)) {
-        $dataArrays[] = $skuPrices;
+date_default_timezone_set('Asia/Jakarta');
+$hour = (int) date('G');
+$day = (int) date('N');
+
+if (file_exists($phpFile)) {
+  $campaigns = include $phpFile;
+
+  if (is_array($campaigns)) {
+    foreach ($campaigns as $campaign => $info) {
+      if (!is_array($info) || !isset($info['prices'])) continue;
+
+      $schedule = $info['schedule'] ?? null;
+      $prices = $info['prices'];
+
+      if (
+        !$schedule || 
+        (in_array($day, $schedule['days']) && $hour >= $schedule['start'] && $hour <= $schedule['end'])
+      ) {
+        $dataArrays[] = $prices;
       }
     }
   }
 }
+
 
 function get_lowest_price_for_sku($sku, $dataArrays)
 {
@@ -50,7 +62,7 @@ function campaign_price_filter($price, $product)
   return $lowestPrice !== null ? $lowestPrice : $price;
 }
 
-add_filter('woocommerce_get_price', 'campaign_price_filter2', 99, 2);
+add_filter('woocommerce_product_get_price', 'campaign_price_filter2', 99, 2);
 function campaign_price_filter2($price, $product)
 {
   if (get_option('campaign_price_module') !== 'yes') {
