@@ -14,7 +14,7 @@ function list_menu_page()
     'checkout_field_remover_module' => 'CFRM | Hapus field checkout',
     'delivery_fee_promo_module' => 'DFPM | Promo diskon ongkir',
     'image_formatter_module' => 'IFM | Format gambar menjadi WebP',
-    'order_notification_module' => 'ONM | Tampilkan notifikasi saat diskon diterapkan',
+    'order_notification_module' => 'ONM | Tampilkan notifikasi saat ada order baru',
     'role_price_module' => 'RPM | Diskon kuantitas berdasarkan jumlah dan role',
     'shipment_method_limit_module' => 'SMLM | Batasi metode pengiriman',
     'title_limiter_module' => 'TLM | Batasi judul produk'
