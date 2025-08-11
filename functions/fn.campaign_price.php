@@ -79,8 +79,8 @@ function campaign_price_filter2($price, $product)
   return $lowestPrice !== null ? $lowestPrice : $price;
 }
 
-add_filter('woocommerce_variable_price_html', 'ramadhan_variation_html', 99, 2);
-function ramadhan_variation_html($price_html, $product)
+add_filter('woocommerce_variable_price_html', 'campaign_variation_html', 99, 2);
+function campaign_variation_html($price_html, $product)
 {
   if (get_option('campaign_price_module') !== 'yes') {
     return $price_html;
@@ -109,3 +109,24 @@ function ramadhan_variation_html($price_html, $product)
   }
   return $price_html;
 }
+
+add_action('woocommerce_before_calculate_totals', function($cart) {
+    if (get_option('campaign_price_module') !== 'yes') {
+        return;
+    }
+
+    global $dataArrays;
+    if (is_admin() && !defined('DOING_AJAX')) {
+        return;
+    }
+
+    foreach ($cart->get_cart() as $cart_item) {
+        $product = $cart_item['data'];
+        $sku = $product->get_sku();
+        $lowestPrice = get_lowest_price_for_sku($sku, $dataArrays);
+
+        if ($lowestPrice !== null) {
+            $product->set_price($lowestPrice);
+        }
+    }
+}, 10);
