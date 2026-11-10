@@ -4,9 +4,16 @@ Plugin Name: KiiP Helpers
 Description: Plugin to add helper functions for project KiiP.
 Author: Agi
 Author URI: https://github.com/ghinearyou/
-Version: 1.3
+Version: 1.4
+Requires PHP: 7.4
 
 */
+if (!defined('ABSPATH')) {
+  exit;
+}
+
+define('KIIP_HELPERS_FILE', __FILE__);
+
 // Include functions.php, use require_once to stop the script if mfp-functions.php is not found
 require_once plugin_dir_path(__FILE__) . 'functions/index.php';
 
