@@ -1,26 +1,45 @@
 <?php
 
+if (!defined('ABSPATH')) {
+  exit;
+}
+
 function delivery_fee_promo_page()
 {
-  if (isset($_POST['dfpm_input_promo_name'])) {
-    update_option('dfpm_input_promo_name', sanitize_text_field($_POST['dfpm_input_promo_name']));
-  }
-  if (isset($_POST['dfpm_input_promo_amount'])) {
-    update_option('dfpm_input_promo_amount', sanitize_text_field($_POST['dfpm_input_promo_amount']));
-  }
+  kiip_save_simple_options('kiip_dfpm_save', [
+    'dfpm_input_promo_name' => 'sanitize_text_field',
+    'dfpm_input_promo_amount' => function ($value) {
+      return (string) max(0, (float) preg_replace('/[^0-9.]/', '', (string) $value));
+    },
+  ]);
 
-  $input1 = get_option('dfpm_input_promo_name', '');
-  $input2 = get_option('dfpm_input_promo_amount', '');
-
+  $name = get_option('dfpm_input_promo_name', '');
+  $amount = get_option('dfpm_input_promo_amount', '');
   ?>
-  <form method="post">
-    <label for="dfpm_input_promo_name">Promo Name: </label>
-    <input type="text" name="dfpm_input_promo_name" value="<?php echo esc_attr($input1); ?>" />
-    <label for="dfpm_input_promo_amount">Promo Amount: </label>
-    <input type="text" name="dfpm_input_promo_amount" value="<?php echo esc_attr($input2); ?>" />
-
-    <br><br>
-    <input type="submit" class="button button-primary" value="Simpan Pengaturan">
-  </form>
+  <div class="kiip-card">
+    <h2>Promo Diskon Ongkir</h2>
+    <p class="description">Ongkir di keranjang dipotong sebesar nominal di bawah (maksimal sebesar ongkirnya), dan tampil sebagai baris biaya negatif.</p>
+    <form method="post">
+      <table class="form-table" role="presentation">
+        <tr>
+          <th scope="row"><label for="dfpm_input_promo_name">Nama promo</label></th>
+          <td>
+            <input type="text" id="dfpm_input_promo_name" name="dfpm_input_promo_name" class="regular-text"
+              value="<?php echo esc_attr($name); ?>" placeholder="contoh: Potongan Ongkir">
+            <p class="description">Teks yang dilihat pembeli di keranjang dan checkout.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><label for="dfpm_input_promo_amount">Potongan maksimal</label></th>
+          <td>
+            <span class="kiip-prefix">Rp</span>
+            <input type="number" id="dfpm_input_promo_amount" name="dfpm_input_promo_amount" min="0" step="1" class="regular-text"
+              value="<?php echo esc_attr($amount); ?>" placeholder="contoh: 10000">
+          </td>
+        </tr>
+      </table>
+      <?php kiip_save_button('kiip_dfpm_save'); ?>
+    </form>
+  </div>
   <?php
 }
