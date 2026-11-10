@@ -5,7 +5,8 @@
  * Alur:
  *  - Link Google Sheets disimpan di pengaturan (sheet harus bisa dilihat oleh siapa saja yang punya link).
  *  - Tab yang dipakai = tab "SK" dengan tanggal terbaru, format nama: "30 Okt SK 2026".
- *  - Kolom yang dibaca: SKU dan SRP. Harga = SRP x pengali (default 1000), diisi ke harga normal (regular price).
+ *  - Kolom yang dibaca: SKU dan SRP. Harga = SRP x pengali (default 1000), dibandingkan dan diisi ke harga promo (sale price).
+ *    Harga normal (regular price) tidak diubah.
  *  - SKU di sheet bisa SKU induk (ABC-DEF-GHI), sedangkan di web variasinya ABC-DEF-GHI-1, -2, dst.
  *    Jadi produk web dicocokkan dengan: SKU-nya sendiri, lalu SKU produk induk, lalu SKU tanpa akhiran "-angka".
  */
@@ -250,7 +251,7 @@ function kiip_pum_match_sku($sku, $parent_sku, $sheet_prices)
 /**
  * Bandingkan produk web dengan harga di sheet.
  *
- * @param array $items list of ['id','sku','parent_sku','name','status','price','parent_id']
+ * @param array $items list of ['id','sku','parent_sku','name','status','price' (sale price),'regular','parent_id']
  * @return array ['diffs' => [...], 'same' => n, 'web_missing' => [...], 'sheet_missing' => [...]]
  */
 function kiip_pum_compare($items, $sheet_prices)
@@ -414,7 +415,8 @@ function kiip_pum_web_items()
           'parent_sku' => $parent_sku,
           'name' => $variation->get_name(),
           'status' => $product->get_status(),
-          'price' => $variation->get_regular_price('edit'),
+          'price' => $variation->get_sale_price('edit'),
+          'regular' => $variation->get_regular_price('edit'),
         ];
       }
     } else {
@@ -425,7 +427,8 @@ function kiip_pum_web_items()
         'parent_sku' => '',
         'name' => $product->get_name(),
         'status' => $product->get_status(),
-        'price' => $product->get_regular_price('edit'),
+        'price' => $product->get_sale_price('edit'),
+        'regular' => $product->get_regular_price('edit'),
       ];
     }
   }
@@ -469,7 +472,7 @@ function kiip_pum_apply($only_ids = null)
       continue;
     }
     try {
-      $product->set_regular_price($diff['new_price']);
+      $product->set_sale_price($diff['new_price']);
       $product->save();
       $updated[] = $diff;
     } catch (Exception $e) {
