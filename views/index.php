@@ -213,8 +213,8 @@ function kiip_render_update_box()
   $settings = kiip_update_settings();
   $installed = kiip_installed_version();
   $remote = get_transient(KIIP_UPDATE_CACHE_KEY);
-  if (!is_array($remote) && $settings['token'] !== '') {
-    // Cek otomatis sekali per jam kalau token sudah ada.
+  if (!is_array($remote)) {
+    // Cek otomatis, hasilnya di-cache 1 jam.
     $remote = kiip_get_remote_version();
   }
   $has_update = is_array($remote) && version_compare($remote['version'], $installed, '>');
@@ -257,7 +257,7 @@ function kiip_render_update_box()
       </div>
     </div>
 
-    <details class="kiip-details" <?php echo $settings['token'] === '' ? 'open' : ''; ?>>
+    <details class="kiip-details">
       <summary>Pengaturan GitHub</summary>
       <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
         <input type="hidden" name="action" value="kiip_save_update_settings">
@@ -274,8 +274,8 @@ function kiip_render_update_box()
                 <?php if ($settings['token'] !== ''): ?>
                   <label><input type="checkbox" name="kiip_update_token_clear" value="1"> Hapus token</label>
                 <?php endif; ?>
-                <p class="description">Repo private, jadi butuh token. Buat di GitHub → Settings → Developer settings →
-                  Fine-grained tokens, pilih repo ini saja, izin <strong>Contents: Read-only</strong>.</p>
+                <p class="description">Opsional. Kosongkan kalau repo publik. Hanya perlu kalau repo private: buat di GitHub → Settings →
+                  Developer settings → Fine-grained tokens, pilih repo ini saja, izin <strong>Contents: Read-only</strong>.</p>
               <?php endif; ?>
             </td>
           </tr>
