@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
+require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/vw.campaign_price.php';
 require_once __DIR__ . '/vw.delivery_fee_promo.php';
 require_once __DIR__ . '/vw.image_formatter.php';
@@ -122,6 +123,8 @@ function list_menu_page()
       <a class="kiip-pill kiip-pill-red" href="<?php echo esc_url(kiip_tab_url('sales_mode_module')); ?>">Penjualan nonaktif</a>
     <?php endif; ?>
     <hr class="wp-header-end">
+
+    <?php kiip_render_flash(); ?>
 
 
     <nav class="nav-tab-wrapper">
@@ -248,9 +251,31 @@ function kiip_admin_styles()
     .kiip-wrap .kiip-table .num { text-align:right; white-space:nowrap; }
     .kiip-wrap .kiip-up { color:#00702a; }
     .kiip-wrap .kiip-down { color:#b32d2e; }
+    .kiip-wrap .kiip-pill-green { background:#edfaef; color:#00702a; border:1px solid #b8e6c3; margin-left:0; }
+    .kiip-wrap .kiip-pill-grey { background:#f0f0f1; color:#646970; border:1px solid #dcdcde; margin-left:0; font-weight:normal; }
+    .kiip-wrap .kiip-table td, .kiip-wrap .kiip-table th { vertical-align:middle; }
+    .kiip-wrap .kiip-table code { font-size:11px; }
+    .kiip-wrap .kiip-actions-col { text-align:right; white-space:nowrap; width:1%; }
+    .kiip-wrap .kiip-actions-col .button + .button { margin-left:4px; }
+    .kiip-wrap .kiip-edit-row td { background:#f6f7f7; }
+    .kiip-wrap .kiip-inline-form { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .kiip-wrap .kiip-days { display:inline-flex; flex-wrap:wrap; gap:4px; border:0; padding:0; margin:0; }
+    .kiip-wrap .kiip-days label { margin:0 !important; }
+    .kiip-wrap .kiip-days input { position:absolute; opacity:0; }
+    .kiip-wrap .kiip-days span { display:inline-block; min-width:38px; padding:4px 6px; border:1px solid #8c8f94; border-radius:3px; text-align:center; cursor:pointer; background:#fff; }
+    .kiip-wrap .kiip-days input:checked + span { background:#2271b1; border-color:#2271b1; color:#fff; }
+    .kiip-wrap .kiip-days input:focus-visible + span { outline:2px solid #2271b1; outline-offset:1px; }
+    .kiip-wrap .kiip-prefix { color:#646970; margin-right:4px; }
+    .kiip-wrap .kiip-card > .description:first-of-type { margin-top:-4px; margin-bottom:12px; }
     @media (max-width: 782px) {
       .kiip-wrap table.kiip-modules .col-link { display:none; }
     }
   </style>
+  <script>
+    function kiipToggle(id) {
+      var el = document.getElementById(id);
+      if (el) { el.hidden = !el.hidden; }
+    }
+  </script>
   <?php
 }
