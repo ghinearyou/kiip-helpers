@@ -88,7 +88,7 @@ function price_update_page()
             <td>
               <input type="number" id="pum_multiplier" name="pum_multiplier" min="1" step="any"
                 value="<?php echo esc_attr($settings['multiplier']); ?>" class="small-text">
-              <p class="description">Harga normal = SRP × pengali. Contoh SRP 125 × 1000 = Rp 125.000.</p>
+              <p class="description">Harga promo (sale price) = SRP × pengali. Contoh SRP 125 × 1000 = Rp 125.000. Harga normal tidak diubah.</p>
             </td>
           </tr>
           <tr>
@@ -147,7 +147,7 @@ function price_update_page()
     <?php if ($sub === 'update'): ?>
       <button type="submit" name="pum_action" value="preview" class="button">Preview</button>
       <button type="submit" name="pum_action" value="apply" class="button button-primary"
-        onclick="return confirm('Update harga normal semua produk yang berbeda dengan Google Sheets?');">Update Harga</button>
+        onclick="return confirm('Update harga promo (sale price) semua produk yang berbeda dengan Google Sheets?');">Update Harga</button>
     <?php else: ?>
       <button type="submit" name="pum_action" value="refresh" class="button">Ambil ulang dari Sheets</button>
     <?php endif; ?>
@@ -222,8 +222,9 @@ function kiip_pum_render_diffs($report, $apply_result)
         <th>SKU web</th>
         <th>SKU sheet</th>
         <th>Produk</th>
-        <th class="num">Harga web</th>
-        <th class="num">Harga sheet</th>
+        <th class="num">Harga normal</th>
+        <th class="num">Sale price web</th>
+        <th class="num">Sale price sheet</th>
         <th class="num">Selisih</th>
       </tr>
     </thead>
@@ -234,8 +235,14 @@ function kiip_pum_render_diffs($report, $apply_result)
           <td><code><?php echo esc_html($row['sku'] ?: '-'); ?></code></td>
           <td><code><?php echo esc_html($row['sheet_sku']); ?></code></td>
           <td><a href="<?php echo kiip_pum_edit_link($row); ?>"><?php echo esc_html($row['name']); ?></a></td>
+          <td class="num kiip-muted"><?php echo kiip_pum_money($row['regular'] ?? ''); ?></td>
           <td class="num"><?php echo kiip_pum_money($row['price']); ?></td>
-          <td class="num"><strong><?php echo kiip_pum_money($row['new_price']); ?></strong></td>
+          <td class="num">
+            <strong><?php echo kiip_pum_money($row['new_price']); ?></strong>
+            <?php if (($row['regular'] ?? '') === '' || (float) $row['new_price'] >= (float) $row['regular']): ?>
+              <br><span class="kiip-error" title="WooCommerce hanya memakai sale price kalau lebih kecil dari harga normal">≥ harga normal, promo tidak akan tampil</span>
+            <?php endif; ?>
+          </td>
           <td class="num <?php echo $delta > 0 ? 'kiip-up' : 'kiip-down'; ?>">
             <?php echo $row['price'] === '' ? '-' : ($delta > 0 ? '+' : '−') . esc_html(number_format(abs($delta), 0, ',', '.')); ?>
           </td>
@@ -256,7 +263,7 @@ function kiip_pum_render_web_missing($items)
   ?>
   <table class="widefat striped kiip-table">
     <thead>
-      <tr><th>SKU</th><th>Produk</th><th>Status</th><th class="num">Harga web</th></tr>
+      <tr><th>SKU</th><th>Produk</th><th>Status</th><th class="num">Sale price web</th></tr>
     </thead>
     <tbody>
       <?php foreach ($items as $item): ?>
