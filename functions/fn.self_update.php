@@ -3,7 +3,9 @@
  * Self update: cek versi terbaru di GitHub (header "Version:" di main.php)
  * lalu pasang zip dari branch tersebut lewat Plugin_Upgrader bawaan WordPress.
  *
- * Repo private butuh GitHub token (fine-grained, akses "Contents: Read-only").
+ * Repo publik tidak butuh token: versi dibaca dari raw.githubusercontent.com dan zip
+ * diunduh dari codeload.github.com (tanpa batas rate limit API GitHub).
+ * Token hanya perlu kalau repo dijadikan private lagi (fine-grained, "Contents: Read-only").
  * Token bisa diisi di halaman KiiP Helpers, atau lewat wp-config.php:
  *   define('KIIP_GITHUB_TOKEN', 'github_pat_xxx');
  */
@@ -64,6 +66,17 @@ function kiip_github_request($path, $accept = 'application/vnd.github+json', $ex
   return wp_remote_get($url, array_merge(['headers' => $headers, 'timeout' => 30], $extra_args));
 }
 
+/**
+ * Request tanpa token untuk repo publik.
+ */
+function kiip_public_request($url, $extra_args = [])
+{
+  return wp_remote_get($url, array_merge([
+    'headers' => ['User-Agent' => 'kiip-helpers-updater'],
+    'timeout' => 30,
+  ], $extra_args));
+}
+
 function kiip_github_error($response)
 {
   if (is_wp_error($response)) {
@@ -82,7 +95,7 @@ function kiip_github_error($response)
       break;
     case 404:
       $msg = $settings['token'] === ''
-        ? 'Repo tidak ditemukan (404). Repo ini private, isi GitHub token terlebih dahulu.'
+        ? 'Repo atau branch "' . $settings['branch'] . '" tidak ditemukan (404). Pastikan repo publik, atau isi GitHub token kalau repo private.'
         : 'Repo atau branch "' . $settings['branch'] . '" tidak ditemukan (404), atau token tidak punya akses ke repo ini.';
       break;
     default:
@@ -110,10 +123,16 @@ function kiip_get_remote_version($force = false)
     return $cached;
   }
 
-  $response = kiip_github_request(
-    '/contents/main.php?ref=' . rawurlencode($settings['branch']),
-    'application/vnd.github.raw'
-  );
+  if ($settings['token'] === '') {
+    $response = kiip_public_request(
+      'https://raw.githubusercontent.com/' . $settings['repo'] . '/' . rawurlencode($settings['branch']) . '/main.php'
+    );
+  } else {
+    $response = kiip_github_request(
+      '/contents/main.php?ref=' . rawurlencode($settings['branch']),
+      'application/vnd.github.raw'
+    );
+  }
 
   if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200) {
     return kiip_github_error($response);
@@ -186,11 +205,15 @@ function kiip_perform_self_update()
     return new WP_Error('kiip_update_tmp', 'Tidak bisa membuat file sementara di server.');
   }
 
-  $response = kiip_github_request(
-    '/zipball/' . rawurlencode($settings['branch']),
-    'application/vnd.github+json',
-    ['timeout' => 300, 'stream' => true, 'filename' => $tmp]
-  );
+  $download_args = ['timeout' => 300, 'stream' => true, 'filename' => $tmp];
+  if ($settings['token'] === '') {
+    $response = kiip_public_request(
+      'https://codeload.github.com/' . $settings['repo'] . '/zip/refs/heads/' . rawurlencode($settings['branch']),
+      $download_args
+    );
+  } else {
+    $response = kiip_github_request('/zipball/' . rawurlencode($settings['branch']), 'application/vnd.github+json', $download_args);
+  }
 
   if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200) {
     @unlink($tmp);
