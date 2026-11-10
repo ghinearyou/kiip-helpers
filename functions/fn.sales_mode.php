@@ -79,12 +79,15 @@ add_action('woocommerce_single_product_summary', function () {
 }, 31);
 
 // Banner di bagian atas semua halaman depan.
+// Class kadence-before-wrapper-item: tema Kadence mengurangi tinggi elemen ini dari offset
+// header sticky, jadi saat banner ikut ter-scroll hilang, header menempel di paling atas
+// (tidak menyisakan celah setinggi banner).
 add_action('wp_body_open', function () {
   if (!kiip_sales_closed() || is_admin()) {
     return;
   }
   ?>
-  <div class="kiip-sales-closed-banner" role="status"
+  <div class="kiip-sales-closed-banner kadence-before-wrapper-item" role="status"
     style="background:#b32d2e;color:#fff;text-align:center;padding:10px 16px;font-size:15px;line-height:1.4;position:relative;z-index:9999;">
     <?php echo esc_html(kiip_sales_mode_message()); ?>
     <?php if (!kiip_sales_blocked_for_current_user()): ?>
