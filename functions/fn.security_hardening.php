@@ -4,7 +4,7 @@
  *
  * Menutup celah umum WordPress yang ditemukan di audit keamanan:
  * - XML-RPC dimatikan total (system.multicall untuk brute force, pingback.ping untuk DDoS).
- * - Daftar user lewat REST (/wp/v2/users) hanya untuk yang sudah login.
+ * - Daftar user lewat REST (/wp/v2/users) hanya untuk staf (bukan pelanggan atau pengunjung).
  * - Enumerasi username lewat ?author=N dan halaman arsip penulis dialihkan ke beranda.
  * - Nama penulis dihapus dari respons oEmbed.
  * - Header keamanan (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy).
@@ -59,20 +59,28 @@ add_action('init', function () {
 
 /* ---------- Enumerasi user ---------- */
 
-// /wp-json/wp/v2/users hanya untuk user yang login (editor blok tetap bisa memilih penulis).
+// /wp-json/wp/v2/users hanya untuk staf yang bisa menulis/mengelola konten (editor blok tetap bisa
+// memilih penulis). Pelanggan WooCommerce bisa daftar sendiri, jadi "sudah login" saja tidak cukup.
+// Route REST WordPress dicocokkan tanpa memperhatikan huruf besar/kecil (/wp/v2/USERS juga jalan),
+// jadi pola di sini juga pakai flag i.
 add_filter('rest_pre_dispatch', function ($result, $server, $request) {
-  if (!kiip_shm_active() || is_user_logged_in()) {
+  if (!kiip_shm_active() || current_user_can('edit_posts') || current_user_can('list_users')) {
     return $result;
   }
-  if (preg_match('#^/wp/v2/users(/|$)#', $request->get_route())) {
+  $route = $request->get_route();
+  // /users/me hanya menampilkan data diri sendiri, tetap boleh untuk user yang login.
+  if (is_user_logged_in() && preg_match('#^/wp/v2/users/me/?$#i', $route)) {
+    return $result;
+  }
+  if (preg_match('#^/wp/v2/users(/|$)#i', $route)) {
     return new WP_Error('rest_user_cannot_view', 'Tidak diizinkan.', ['status' => 401]);
   }
   return $result;
 }, 10, 3);
 
-// ?author=1 dan /author/<slug>/ membocorkan username. Alihkan ke beranda untuk pengunjung.
+// ?author=1 dan /author/<slug>/ membocorkan username. Alihkan ke beranda untuk pengunjung dan pelanggan.
 add_action('template_redirect', function () {
-  if (!kiip_shm_active() || is_user_logged_in()) {
+  if (!kiip_shm_active() || current_user_can('edit_posts')) {
     return;
   }
   if (isset($_GET['author']) || is_author()) {
