@@ -4,7 +4,7 @@ Plugin Name: KiiP Helpers
 Description: Plugin to add helper functions for project KiiP.
 Author: Agi
 Author URI: https://github.com/ghinearyou/
-Version: 1.4.5
+Version: 1.4.6
 Requires PHP: 7.4
 
 */

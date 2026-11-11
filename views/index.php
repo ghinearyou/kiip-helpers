@@ -69,6 +69,12 @@ function kiip_modules()
       'desc' => 'Aktifkan atau hentikan penjualan di toko dengan satu tombol.',
       'page' => 'sales_mode_page',
     ],
+    'security_hardening_module' => [
+      'code' => 'SHM',
+      'name' => 'Keamanan Dasar',
+      'desc' => 'Matikan XML-RPC, sembunyikan username dan versi, tambah header keamanan.',
+      'page' => null,
+    ],
     'shipment_method_limit_module' => [
       'code' => 'SMLM',
       'name' => 'Shipment Method Limit',
