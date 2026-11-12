@@ -13,6 +13,7 @@ require_once __DIR__ . '/vw.role_price.php';
 require_once __DIR__ . '/vw.title_limiter.php';
 require_once __DIR__ . '/vw.sales_mode.php';
 require_once __DIR__ . '/vw.price_update.php';
+require_once __DIR__ . '/vw.copy_listing.php';
 
 /**
  * Daftar modul. Key = nama option on/off (nilai 'yes' / 'no').
@@ -32,6 +33,12 @@ function kiip_modules()
       'name' => 'Checkout Field Remover',
       'desc' => 'Hapus field pinpoint lokasi di halaman checkout.',
       'page' => null,
+    ],
+    'copy_listing_module' => [
+      'code' => 'CLM',
+      'name' => 'Salin Listing',
+      'desc' => 'Salin produk dari link Shopee / Tokopedia menjadi draft produk (judul, deskripsi, gambar, harga, variasi).',
+      'page' => 'copy_listing_page',
     ],
     'delivery_fee_promo_module' => [
       'code' => 'DFPM',
