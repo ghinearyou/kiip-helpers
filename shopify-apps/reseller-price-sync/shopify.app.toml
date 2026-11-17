@@ -1,0 +1,20 @@
+# Konfigurasi app "Sync Harga Reseller" Sakumini.
+# client_id diisi otomatis saat menjalankan `npm run config:link`.
+client_id = ""
+name = "Sync Harga Reseller"
+embedded = true
+
+[access_scopes]
+# read_products: baca varian + price list. write_products: tulis fixed price di price list.
+scopes = "read_products,write_products"
+
+[webhooks]
+api_version = "2026-10"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = ["app/uninstalled"]
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"

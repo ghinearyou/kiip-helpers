@@ -1,0 +1,2 @@
+# Kode app Shopify tidak ikut ke zip plugin WordPress (self-update via codeload).
+/shopify-apps export-ignore
